@@ -11,14 +11,14 @@ exports.importUsersConsumer = async (event, context, callback) => {
   let dbConfig;
   let dbresponse;
   let response;
-  let localhost 
+  let localhost
   try {
     const message = JSON.parse(event.Records[0].body);
     // const message = JSON.parse(event.body);
 
     const { orgDetails } = message;
     // localhost= "http://172.16.10.159:1337";
-    localhost=`https://cloud.${orgDetails.tldName}`
+    localhost = `https://cloud.${orgDetails.tldName}`
     console.log("orgDetails in consumer", orgDetails);
     console.log("import users payload from queue", message);
     // const message = {
@@ -85,10 +85,6 @@ exports.importUsersConsumer = async (event, context, callback) => {
           lastName: message?.lastName,
           mobileNumber: "0",
           orgCode: orgDetails?.orgCode,
-          orgId: orgDetails?.orgVWID,
-          orgName: orgDetails?.name,
-          orgSchemeId: vwpOrgSchemaId,
-          entryPointList: vwpEntryPoint,
         };
 
         console.log("vwpPayload", vwpPayload);
@@ -107,12 +103,11 @@ exports.importUsersConsumer = async (event, context, callback) => {
           vwpPayload
         );
         console.log("vwpResponse", vwpResponse);
-        console.log("workSpcesArray",vwpResponse.data.workspacePersonVwpIds)
+        console.log("workSpcesArray", vwpResponse.data.workspacePersonVwpIds)
         let data = vwpResponse.data.data;
         console.log(
           "payload to vls function",
-          orgDetails?.vlsOrgID,
-          data?.personFirstName,
+
           data?.personLastName,
           data?.email,
           data?.personId,
@@ -153,7 +148,7 @@ exports.importUsersConsumer = async (event, context, callback) => {
 
             if (checkAndAddChatEnableResponse.addUser) {
               for (let index = 0; index < vwpEntryPoints.length; index++) {
-                let appType = vwpEntryPoints[index].appType;
+                let appType = ""
                 if (appType === "ownerApp") {
                   dbresponse = await dbConfig.query(
                     "select * from vls_functions_assign_subscription_for_ownerapp($1,$2,$3,$4,$5,$6,$7)", //vls_fetch_my_subscription_active_users
@@ -262,7 +257,7 @@ exports.importUsersConsumer = async (event, context, callback) => {
           );
 
           console.log("vwpResponse", vwpResponse);
-          console.log("workSpcesArray",vwpResponse.data.workspacePersonVwpIds)
+          console.log("workSpcesArray", vwpResponse.data.workspacePersonVwpIds)
           //VLS call to insert the orgPersonId
           const { data } = vwpResponse.data;
           console.log(
@@ -456,61 +451,61 @@ exports.importUsersConsumer = async (event, context, callback) => {
               [
                 JSON.stringify({
                   _platform_id: tldId,
-                    _platform_user_id: extraData.vlsPersonId,
-                    _user_id: userId,
-                    _event_id: 4,
-                    _vls_org_id:orgDetails.vlsOrgID,
-                    _org_schema_id: message.orgSchemaId,
-                  }),
-                ]
-              );
+                  _platform_user_id: extraData.vlsPersonId,
+                  _user_id: userId,
+                  _event_id: 4,
+                  _vls_org_id: orgDetails.vlsOrgID,
+                  _org_schema_id: message.orgSchemaId,
+                }),
+              ]
+            );
 
-              console.log(
-                "invite user emailTemplateResponse:",
-                emailTemplateResponse.rows[0].vls_template4
-              );
+            console.log(
+              "invite user emailTemplateResponse:",
+              emailTemplateResponse.rows[0].vls_template4
+            );
 
-              const {
-                _template_name,
-                _template_logo,
-                _user_onboarding_url,
-                _platform_name,
-                _platform_endpoint,
-                _platform_url,
-                _platform_email,
-                _platform_logo,
-                _platform_facebook,
-                _platform_instagram,
-                _platform_linkedin,
-                _platform_privacy_policy,
-                _button_text,
-                _org_admin_name,
-                _org_name,
-                _subdomain_code,
-                _org_logo,
-                _org_email,
-                _org_url,
-                _org_privacy_policy_url,
-                _org_facebook_url,
-                _org_instagram_url,
-                _org_linkedin_url
-              } = emailTemplateResponse.rows[0].vls_template4;
+            const {
+              _template_name,
+              _template_logo,
+              _user_onboarding_url,
+              _platform_name,
+              _platform_endpoint,
+              _platform_url,
+              _platform_email,
+              _platform_logo,
+              _platform_facebook,
+              _platform_instagram,
+              _platform_linkedin,
+              _platform_privacy_policy,
+              _button_text,
+              _org_admin_name,
+              _org_name,
+              _subdomain_code,
+              _org_logo,
+              _org_email,
+              _org_url,
+              _org_privacy_policy_url,
+              _org_facebook_url,
+              _org_instagram_url,
+              _org_linkedin_url
+            } = emailTemplateResponse.rows[0].vls_template4;
 
-              const emailTemplateData = {
-                platformURL: _org_url || "",
-                platformLogo: _org_logo || "",
-                templateLogo: _template_logo || "",
-                orgAdmin: _org_admin_name || "",
-                orgName: _org_name || "",
-                buttonContext: _button_text || "",
-                userOnboardingURL: _user_onboarding_url || "",
-                privacyPolicyLink: _org_privacy_policy_url || "",
-                fbLink: _org_facebook_url || "",
-                instaLink: _org_instagram_url || "",
-                platFormName: _platform_endpoint || "",
-                linkedInLink: _org_linkedin_url || "",
-              };
-              console.log({emailTemplateData});
+            const emailTemplateData = {
+              platformURL: _org_url || "",
+              platformLogo: _org_logo || "",
+              templateLogo: _template_logo || "",
+              orgAdmin: _org_admin_name || "",
+              orgName: _org_name || "",
+              buttonContext: _button_text || "",
+              userOnboardingURL: _user_onboarding_url || "",
+              privacyPolicyLink: _org_privacy_policy_url || "",
+              fbLink: _org_facebook_url || "",
+              instaLink: _org_instagram_url || "",
+              platFormName: _platform_endpoint || "",
+              linkedInLink: _org_linkedin_url || "",
+            };
+            console.log({ emailTemplateData });
 
             const sqsPayload = [
               {
