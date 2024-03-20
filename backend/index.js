@@ -228,7 +228,7 @@ exports.importUsersConsumer = async (event, context, callback) => {
         if (message.isSilentOnboarding) {
           console.log("in silent onboard for new user");
           const vwpPayload = {
-            RegNo: 20001,
+            reg: "sdfdsf",
             countryCode: "",
             domainName: orgDetails.tldName,
             email: message.email,
@@ -275,7 +275,7 @@ exports.importUsersConsumer = async (event, context, callback) => {
               "select * from vls_function_add_org_person($1,$2,$3,$4,$5,$6)",
               [
                 orgDetails?.vlsOrgID,
-                message?.firstName,
+                "",
                 message?.lastName,
                 data?.email,
                 data?.personId,
