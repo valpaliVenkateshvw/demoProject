@@ -110,8 +110,7 @@ exports.importUsersConsumer = async (event, context, callback) => {
 
           data?.personLastName,
           data?.email,
-          data?.personId,
-          data?.orgPersonVwid
+          data?.personId
         );
         if (data.email) {
           dbresponse = await dbConfig.query(
@@ -122,7 +121,7 @@ exports.importUsersConsumer = async (event, context, callback) => {
               data?.personLastName,
               data?.email,
               data?.personId,
-              data?.orgPersonVwid,
+              data.hostName
             ]
           );
           console.log("if condition orgPersonId db response", dbresponse);
