@@ -215,6 +215,78 @@ exports.importUsersConsumer = async (event, context, callback) => {
                 }
               }
             }
+            if (checkAndAddChatEnableResponse.addUser) {
+                for (let index = 0; index < vwpEntryPoints.length; index++) {
+                  let appType = ""
+                  if (appType === "ownerApp") {
+                    dbresponse = await dbConfig.query(
+                      "select * from vls_functions_assign_subscription_for_ownerapp($1,$2,$3,$4,$5,$6,$7)", //vls_fetch_my_subscription_active_users
+                      [
+                        data?.hostName,
+                        orgDetails?.orgVWID,
+                        data?.personId,
+                        data?.workspacePersonVwpIds[index].workspaceId,
+                        data?.orgPersonVwid,
+                        data?.workspacePersonVwpIds[index].workspacePersonVwpId,
+                        vwpEntryPoints[index].entryPoints.vwp_entry_point_id,
+                      ]
+                    );
+                    console.log(
+                      "dbresponse from owner app susbcription",
+                      dbresponse.rows[0]
+                    );
+                  } else {
+                    let userDetails = [];
+  
+                    let entryPointDetails = {
+                      entryPointId:
+                        vwpEntryPoints[index].entryPoints.vwp_entry_point_id,
+                      appId: data?.workspacePersonVwpIds[index].workspaceId,
+                      appName: appname,
+                      orgId: orgDetails?.orgVWID,
+                      tldId: orgDetails?.tldID,
+                    };
+  
+                    userDetails.push({
+                      firstName: data?.personFirstName,
+                      email: data?.email,
+                      vlsPersonId: vlsPersonId,
+                      hostName: data?.hostName,
+                      personId: data?.personId,
+                      orgPersonVwid: data?.orgPersonVwid,
+                      workspacePersonVwpId:
+                        data?.workspacePersonVwpIds[index].workspacePersonVwpId,
+                    });
+                    console.log(
+                      "first",
+                      userDetails,
+                      "entryPointDetails",
+                      entryPointDetails
+                    );
+                    dbresponse = await dbConfig.query(
+                      "select * from vls_functions_subscription_assign_users_list($1,$2)", //vls_fetch_my_subscription_active_users
+                      [
+                        JSON.stringify(entryPointDetails),
+                        JSON.stringify(userDetails),
+                      ]
+                    );
+                    console.log(
+                      "dbresponse = ",
+                      dbresponse.rows,
+                      dbresponse.rows[0]
+                    );
+                    if (!message.isSilentOnboarding) {
+                      if (dbresponse && dbresponse?.rows?.length > 0) {
+                        let loginDetails = { vlsPersonId: vlsPersonId };
+                        await sendEmailProducer({
+                          userParams: userDetails,
+                        
+                        });
+                      }
+                    }
+                  }
+                }
+              }
           }
         }
 
