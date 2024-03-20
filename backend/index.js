@@ -1388,20 +1388,7 @@ async function sendEmailProducer({
 //           dbstatus = true;
 //           break;
 //         }
-//       }
-
-//       if (dbstatus) {
-//         const payload = {
-//           emailId: dbresponse.rows[0]._email,
-//           orgId: dbresponse.rows[0]._vwp_orgid,
-//           tldId: dbresponse.rows[0]._tld_id,
-//           userId: dbresponse.rows[0]._vls_person_id,
-//           name: `${dbresponse.rows[0]?._firstname} ${dbresponse.rows[0]?._lastname}`,
-//           orgName: dbresponse.rows[0]._org_name,
-//           orgAdmin: `${dbresponse.rows[0]?._org_admin_firstname} ${dbresponse.rows[0]?._org_admin_lastname}`,
-//           hostName: orgDetails.tldName,
-//           // entryPoint: dbresponse.rows[0]._platform_user_entrypoint_id[0],
-//         };
+//
 
 //         // console.log("payload in import", payload, dbresponse.rows[0], dbresponse.rows[0]._tld_id);
 //         // console.log(JSON.stringify(dbresponse.rows[0]));
