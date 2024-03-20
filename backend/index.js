@@ -62,9 +62,7 @@ exports.importUsersConsumer = async (event, context, callback) => {
         dbresponse.rows[0].result_json.appWithEntryPoints[0].vls_app_id;
       let appname =
         dbresponse.rows[0].result_json.appWithEntryPoints[0].appName;
-      let vwpWorkspaceId =
-        dbresponse.rows[0].result_json.appWithEntryPoints[0].entryPoints
-          .vwp_workspace_id;
+      
 
       //code for add user
       const vwpEntryPoint = vwpEntryPoints.map((entryPoint) => {
@@ -77,8 +75,7 @@ exports.importUsersConsumer = async (event, context, callback) => {
 
         const vwpPayload = {
           RegNo: 20001,
-          countryCode: "",
-          domainName: orgDetails.tldName,
+         
           email: message.email,
           isAdmin: false,
           firstName: message?.firstName,
